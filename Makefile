@@ -4,9 +4,10 @@ run:
 
 .PHONY: lint
 lint:
-	flake8 .
-	pylint .
-	black -C .
+	flake8 aap/
+	#isort -c aap/
+	#pylint aap/
+	black --check aap/
 
 .PHONY: test
 test:

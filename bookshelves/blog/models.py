@@ -5,7 +5,6 @@ from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
 
 from base.models import Base
-from zone.models import Zone, Language
 
 
 class Tag(Base):
@@ -25,14 +24,15 @@ class Post(Base):
     title = models.CharField(max_length=1024, null=False, unique=True)
     brief = models.TextField(null=False)
     content = models.TextField(null=False)
+    slug = models.CharField(max_length=1024, unique=True)
     tags = models.ManyToManyField(Tag, related_name="tags")
+    image = models.ImageField()
     is_draft = models.BooleanField(default=False)
     previous = models.ForeignKey(
         "self", null=True, blank=True, on_delete=models.DO_NOTHING
     )
     publisher = models.ForeignKey(User, on_delete=models.CASCADE)
-    zone = models.ForeignKey(Zone, on_delete=models.DO_NOTHING)
-    language = models.ForeignKey(Language, on_delete=models.DO_NOTHING)
+    visited = models.PositiveIntegerField(default=0)
 
     def __str__(self):
         if self.is_deleted:

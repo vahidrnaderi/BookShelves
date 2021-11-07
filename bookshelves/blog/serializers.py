@@ -20,11 +20,6 @@ class TagSerializer(serializers.ModelSerializer):
 class CommentSerializer(serializers.ModelSerializer):
     """Comment serializer."""
 
-    # url = relations.NestedHyperlinkedIdentityField(
-    #     view_name="blog:post-comment-detail",
-    #     parent_lookup_kwargs={"post_pk": "post__pk"}
-    # )
-
     class Meta:
         model = Comment
         read_only_fields = ("is_approved",)
@@ -95,7 +90,7 @@ class PostSerializer(serializers.ModelSerializer):
     stars_average = serializers.SerializerMethodField()
     bookmarks_count = serializers.SerializerMethodField()
     # user = serializers.PrimaryKeyRelatedField(source="user", read_only=True)
-
+    
     class Meta:
         model = Post
         fields = (

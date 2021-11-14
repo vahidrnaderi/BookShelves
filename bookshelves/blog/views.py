@@ -49,10 +49,7 @@ class PostViewSet(
     serializer_class = PostSerializer
 
     def create(self, request, *args, **kwargs):
-        """DRF built-in method.
-
-        Attach user ID into a request.
-        """
+        """Attach user ID into a request."""
         request.data["user"] = self.request.user.id
         return super().create(request, *args, **kwargs)
 
@@ -67,26 +64,17 @@ class CommentViewSet(
     serializer_class = CommentSerializer
 
     def get_queryset(self):
-        """DRF built-in method.
-
-        Only fetch post-related comments.
-        """
+        """Only fetch post-related comments."""
         return Comment.objects.filter(post=self.kwargs["post_pk"])
 
     def create(self, request, *args, **kwargs):
-        """DRF built-in method.
-
-        Attach user ID and post ID into a request.
-        """
+        """Attach user ID and post ID into a request."""
         request.data["user"] = self.request.user.id
         request.data["post"] = kwargs.pop("post_pk")
         return super().create(request, *args, **kwargs)
 
     def update(self, request, *args, **kwargs):
-        """DRF built-in method.
-
-        Attach user ID and post ID into a request.
-        """
+        """Attach user ID and post ID into a request."""
         request.data["user"] = self.request.user.id
         request.data["post"] = kwargs.pop("post_pk")
         return super().update(request, *args, **kwargs)
@@ -101,12 +89,10 @@ class StarViewSet(
     permission_classes = [permissions.IsAuthenticated]
     queryset = Star.objects.all()
     serializer_class = StarSerializer
+    http_method_names = ["post"]
 
     def create(self, request, *args, **kwargs):
-        """DRF built-in method.
-
-        Attach user ID into a request. Also, handle updating a star.
-        """
+        """Attach user ID into a request. Also, handle updating a star."""
         request.data["user"] = self.request.user.id
         current_star = Star.objects.filter(
             user=self.request.user, post=request.data["post"]
@@ -127,17 +113,11 @@ class BookmarkViewSet(BaseViewSet, generics.ListCreateAPIView, generics.DestroyA
     serializer_class = BookmarkSerializer
 
     def get_queryset(self):
-        """DRF built-in method.
-
-        Only fetch bookmark-related posts.
-        """
+        """Only fetch bookmark-related posts."""
         return Post.objects.filter(bookmarks=self.request.user)
 
     def create(self, request, *args, **kwargs):
-        """DRF built-in method.
-
-        Attach user ID into a request.
-        """
+        """Attach user ID into a request."""
         request.data["user"] = self.request.user.id
         try:
             self.get_queryset().get(id=request.data["post"])

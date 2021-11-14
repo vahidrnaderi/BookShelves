@@ -2,9 +2,7 @@
 from django.urls import path, include
 from rest_framework import routers
 
-from .views import (
-    PageViewSet, GroupMenuViewSet, MenuViewSet
-)
+from .views import PageViewSet, GroupMenuViewSet, MenuViewSet
 
 router = routers.DefaultRouter()
 router.register("pages", PageViewSet, basename="page")

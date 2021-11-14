@@ -1,9 +1,9 @@
 """Blog app models."""
 from django.conf import settings
-from django.contrib.auth.models import User
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
 
+from account.models import User
 from base.models import Base, AbstractBase
 
 

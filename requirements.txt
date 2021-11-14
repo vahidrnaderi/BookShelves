@@ -7,3 +7,4 @@ uritemplate==4.1.1
 PyYAML==6.0
 drf-nested-routers==0.93.4
 drf-yasg==1.20.0
+humanfriendly~=10.0

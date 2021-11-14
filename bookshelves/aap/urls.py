@@ -27,16 +27,12 @@ schema_view = get_schema_view(
 urlpatterns = [
     # Account.
     path("account/", include(("account.urls", "account"))),
-
-    # File manager package URL.
-    path("file_manager/", include(("file_manager.urls", "file_manager"))),
-
     # Blog.
     path("blog/", include(("blog.urls", "blog"))),
-
+    # Media (file/directory) manager.
+    path("file/", include(("file.urls", "file"))),
     # Page.
     path("page/", include(("page.urls", "page"))),
-
     # Swagger.
     path(
         "swagger/",

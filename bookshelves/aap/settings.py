@@ -9,15 +9,17 @@ https://docs.djangoproject.com/en/3.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
 """
+import ast
 import os
 from ast import literal_eval
 from pathlib import Path
 
+from django.core.validators import get_available_image_extensions
+
+from .apps import all_serializers
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
-MEDIA_ROOT = os.path.join(BASE_DIR, "media")
-MEDIA_URL = "/media/"
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
@@ -47,9 +49,12 @@ INSTALLED_APPS = [
     "drf_yasg",
     "account",
     "blog",
-    "file_manager",
     "page",
+    "file",
 ]
+
+# It will be overridden by 'page' app.
+SERIALIZERS = {}
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
@@ -87,6 +92,11 @@ DATABASES = {
     "default": {"ENGINE": "django.db.backends.sqlite3", "NAME": BASE_DIR / "db.sqlite3"}
 }
 
+# Customized models.
+
+AUTH_USER_MODEL = "account.User"
+MOBILE_LENGTH = int(os.environ.get("AAP_MOBILE_LENGTH", "13"))
+
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
 
@@ -97,6 +107,11 @@ AUTH_PASSWORD_VALIDATORS = [
     {"NAME": "django.contrib.auth.password_validation.MinimumLengthValidator"},
     {"NAME": "django.contrib.auth.password_validation.CommonPasswordValidator"},
     {"NAME": "django.contrib.auth.password_validation.NumericPasswordValidator"},
+]
+
+AUTHENTICATION_BACKENDS = [
+    "account.backends.AccountBackend",
+    "django.contrib.auth.backends.ModelBackend",
 ]
 
 # Internationalization
@@ -113,6 +128,16 @@ USE_TZ = True
 
 STATIC_URL = "/static/"
 STATIC_ROOT = BASE_DIR / "static"
+
+# Media files and directories.
+
+MEDIA_URL = "/media/"
+MEDIA_ROOT = BASE_DIR / "media"
+MEDIA_ALLOWED_EXTENSIONS = ast.literal_eval(
+    os.environ.get(
+        "AAP_MEDIA_ALLOWED_EXTENSIONS", str(get_available_image_extensions())
+    )
+)
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field

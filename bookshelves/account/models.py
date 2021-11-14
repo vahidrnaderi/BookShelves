@@ -1,24 +1,35 @@
 """Account models."""
 from django.conf import settings
-from django.contrib.auth.models import User, Group
+from django.contrib.auth.models import AbstractUser, Group
+from django.contrib.auth.validators import UnicodeUsernameValidator
 from django.db import models
 from django.db.models import signals
 from django.dispatch import receiver
+from django.utils.translation import gettext_lazy as _
 
 
-class Profile(models.Model):
-    """User profile model."""
+class User(AbstractUser):
+    """Customized version of Django's User model."""
 
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-    mobile = models.CharField(max_length=11, blank=True, null=True)
-    phone = models.CharField(max_length=11, blank=True, null=True)
-
-    class Meta:
-        db_table = "auth_profile"
-        unique_together = [["user", "mobile"], ["user", "phone"]]
+    username = models.CharField(
+        _("username"),
+        max_length=150,
+        unique=True,
+        help_text=_(
+            "Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only."
+        ),
+        validators=[UnicodeUsernameValidator()],
+        error_messages={
+            "unique": _("A user with that username already exists."),
+        },
+        blank=True,
+        null=True,
+    )
+    mobile = models.CharField(max_length=settings.MOBILE_LENGTH)
+    image = models.URLField()
 
     def __str__(self):
-        return self.user.get_full_name()
+        return self.get_full_name()
 
 
 @receiver(signals.post_save, sender=User)

@@ -1,6 +1,6 @@
 """Auth views."""
 from django.contrib.auth import authenticate, logout
-from django.contrib.auth.models import User, Group, Permission
+from django.contrib.auth.models import Group, Permission
 from django.contrib.contenttypes.models import ContentType
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework import viewsets, permissions, views, status, generics
@@ -8,6 +8,7 @@ from rest_framework.authtoken.models import Token
 from rest_framework.response import Response
 
 from base.permissions import AAPDjangoModelPermissions
+from .models import User
 from .serializers import (
     UserSerializer,
     GroupSerializer,
@@ -64,7 +65,8 @@ class LoginView(views.APIView):
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
         user = authenticate(
-            username=serializer.data["username"], password=serializer.data["password"]
+            username=serializer.data["username"],
+            password=serializer.data["password"],
         )
         if not user:
             return Response(

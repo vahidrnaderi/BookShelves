@@ -1,9 +1,11 @@
 """Auth serializers."""
-from django.contrib.auth.models import User, Group, Permission
+from django.contrib.auth.models import Group, Permission
 from django.contrib.contenttypes.models import ContentType
+from django.db.models import Q
 from rest_framework import serializers, exceptions, status
+from django.contrib.auth.models import make_password
 
-from .models import Profile
+from .models import User
 
 
 class ContentTypeSerializer(serializers.ModelSerializer):
@@ -13,6 +15,7 @@ class ContentTypeSerializer(serializers.ModelSerializer):
         model = ContentType
         read_only_fields = ("name",)
         fields = (
+            "id",
             "name",
             "app_label",
         )
@@ -60,26 +63,14 @@ class GroupSerializer(serializers.ModelSerializer):
         )
 
 
-class ProfileSerializer(serializers.ModelSerializer):
-    """Profile serializer."""
-
-    class Meta:
-        model = Profile
-        fields = (
-            "mobile",
-            "phone",
-        )
-
-
 class UserSerializer(serializers.ModelSerializer):
-    """User serializer."""
+    """User's profile serializer."""
 
     url = serializers.HyperlinkedIdentityField(view_name="account:user-detail")
     groups = serializers.PrimaryKeyRelatedField(queryset=Group.objects.all(), many=True)
     permissions = serializers.PrimaryKeyRelatedField(
         queryset=Permission.objects.all(), many=True, source="user_permissions"
     )
-    profile = ProfileSerializer(many=False)
 
     class Meta:
         model = User
@@ -88,6 +79,7 @@ class UserSerializer(serializers.ModelSerializer):
             "url",
             "id",
             "username",
+            "mobile",
             "email",
             "first_name",
             "last_name",
@@ -96,19 +88,30 @@ class UserSerializer(serializers.ModelSerializer):
             "is_active",
             "last_login",
             "date_joined",
-            "profile",
         )
+
+    def _exists(self, query: Q):
+        """Check user attribute existence.
+
+        Raises:
+            exceptions.ValidationError: if a user with an attribute exists.
+        """
+        if User.objects.filter(query, ~Q(user=self.context["request"].user)).exists():
+            raise exceptions.ValidationError(
+                detail={"message": "A user with this info already exists."},
+                code=status.HTTP_400_BAD_REQUEST,
+            )
 
     def validate(self, attrs):
         """DRF built-in method.
 
         Make sure an email is unique.
         """
-        if User.objects.filter(email=attrs["email"]).exists():
-            raise exceptions.ValidationError(
-                detail={"message": "A user with that email already exists."},
-                code=status.HTTP_400_BAD_REQUEST,
-            )
+        # Registration.
+        if not self.instance:
+            self._exists(Q(mobile=attrs["mobile"]))
+            if attrs.get("username"):
+                self._exists(Q(username=attrs["username"]))
         return super().validate(attrs)
 
     def create(self, validated_data):
@@ -116,7 +119,6 @@ class UserSerializer(serializers.ModelSerializer):
 
         Handles groups, permissions, and profile data.
         """
-        profile = validated_data.pop("profile")
         groups = validated_data.pop("groups")
         permissions = validated_data.pop("user_permissions")
 
@@ -125,7 +127,6 @@ class UserSerializer(serializers.ModelSerializer):
             user.groups.add(group)
         for permission in permissions:
             user.user_permissions.add(permission)
-        Profile.objects.create(**profile, user=user)
         return user
 
 
@@ -141,14 +142,15 @@ class RegisterSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ("username", "email", "password")
-        extra_kwargs = {"email": {"required": True}}
+        fields = ("username", "mobile", "email", "password")
+        extra_kwargs = {"mobile": {"required": True}}
 
     def to_representation(self, instance):
         """DRF built-in method."""
         return {
             "username": instance.username,
             "email": instance.email,
+            "mobile": instance.mobile,
         }
 
     def validate(self, attrs):
@@ -156,11 +158,16 @@ class RegisterSerializer(serializers.ModelSerializer):
 
         Make sure an email is unique.
         """
-        if User.objects.filter(email=attrs["email"]).exists():
+        if User.objects.filter(mobile=attrs["mobile"]).exists() or (
+            "username" in attrs
+            and User.objects.filter(username=attrs["username"]).exists()
+        ):
             raise exceptions.ValidationError(
                 detail={"message": "A user with that email already exists."},
                 code=status.HTTP_400_BAD_REQUEST,
             )
+        # Encrypt password.
+        attrs["password"] = make_password(attrs["password"])
         return super().validate(attrs)
 
 

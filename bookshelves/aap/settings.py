@@ -51,9 +51,10 @@ INSTALLED_APPS = [
     "blog",
     "page",
     "file",
+    "slideshow",
 ]
 
-# It will be overridden by 'page' app.
+# Note: it will be overridden by 'page' app.
 SERIALIZERS = {}
 
 MIDDLEWARE = [
@@ -188,3 +189,7 @@ DELETED_POST_CATEGORY_NAME = "__deleted_category"
 # Page component settings.
 
 DELETED_MENU_GROUP_NAME = "__deleted_group_menu"
+
+# Slideshow component settings.
+
+DELETED_SLIDE_GROUP_NAME = "__deleted_group_menu"

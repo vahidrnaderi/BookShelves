@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     "rest_framework",
     "rest_framework.authtoken",
     "drf_yasg",
+    "corsheaders",
     "account",
     "blog",
     "page",
@@ -60,6 +61,7 @@ SERIALIZERS = {}
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
+    "corsheaders.middleware.CorsMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
 ]
@@ -85,6 +87,11 @@ TEMPLATES = [
 WSGI_APPLICATION = "aap.wsgi.application"
 
 APPEND_SLASH = True
+
+# CORS
+
+CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOW_CREDENTIALS = True
 
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases

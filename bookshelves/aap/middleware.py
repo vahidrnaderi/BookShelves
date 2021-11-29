@@ -11,5 +11,5 @@ class CorsMiddleware:
 
     def __call__(self, request):
         response = self.get_response(request)
-        response.headers["Access-Control-Allow-Origin"] = settings.CORS_ALLOWED_HOST
+        response["access-control-allow-origin"] = settings.CORS_ALLOWED_HOST
         return response

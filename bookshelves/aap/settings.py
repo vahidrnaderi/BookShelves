@@ -37,7 +37,7 @@ ALLOWED_HOSTS = literal_eval(
     os.environ.get("AAP_ALLOWED_HOSTS", "['localhost', '127.0.0.1']")
 )
 
-CORS_ALLOWED_HOST = os.environ.get("AAP_CORS_ALLOWED_HOSTS", "localhost")
+CORS_ALLOWED_HOST = os.environ.get("AAP_CORS_ALLOWED_HOST", "*")
 
 # Application definition
 
@@ -60,7 +60,6 @@ INSTALLED_APPS = [
 SERIALIZERS = {}
 
 MIDDLEWARE = [
-    "corsheaders.middleware.CorsMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "aap.middleware.CorsMiddleware",

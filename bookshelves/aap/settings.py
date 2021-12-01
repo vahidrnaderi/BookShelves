@@ -36,8 +36,9 @@ DEBUG = literal_eval(os.environ.get("AAP_DEBUG", "True"))
 ALLOWED_HOSTS = literal_eval(
     os.environ.get("AAP_ALLOWED_HOSTS", "['localhost', '127.0.0.1']")
 )
-
-CORS_ALLOWED_HOST = os.environ.get("AAP_CORS_ALLOWED_HOST", "*")
+CORS_ALLOWED_ORIGIN_REGEXES = [
+    "http(s)?://.*",
+]
 
 # Application definition
 
@@ -48,6 +49,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "rest_framework",
     "rest_framework.authtoken",
+    "corsheaders",
     "drf_yasg",
     "account",
     "blog",
@@ -62,7 +64,7 @@ SERIALIZERS = {}
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
-    "aap.middleware.CorsMiddleware",
+    "corsheaders.middleware.CorsMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
 ]

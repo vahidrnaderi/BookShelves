@@ -51,6 +51,8 @@ class PostViewSet(
     def create(self, request, *args, **kwargs):
         """Attach user ID into a request."""
         request.data["user"] = self.request.user.id
+        if kwargs.get("category_pk"):
+            request.data["category"] = kwargs["category_pk"]
         return super().create(request, *args, **kwargs)
 
 

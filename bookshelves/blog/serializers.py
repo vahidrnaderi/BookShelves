@@ -2,7 +2,7 @@
 from django.db.models import Avg
 from rest_framework import serializers
 
-from account.serializers import UserSerializer
+from account.serializers import UserSerializer, UserGeneralInfoSerializer
 from .models import Post, Tag, Star, Category, Comment
 
 
@@ -88,6 +88,7 @@ class PostSerializer(serializers.ModelSerializer):
     comments_count = serializers.SerializerMethodField()
     stars_average = serializers.SerializerMethodField()
     bookmarks_count = serializers.SerializerMethodField()
+    user = UserGeneralInfoSerializer()
 
     class Meta:
         model = Post

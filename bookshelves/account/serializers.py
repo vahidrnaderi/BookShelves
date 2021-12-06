@@ -1,9 +1,9 @@
 """Auth serializers."""
 from django.contrib.auth.models import Group, Permission
+from django.contrib.auth.models import make_password
 from django.contrib.contenttypes.models import ContentType
 from django.db.models import Q
 from rest_framework import serializers, exceptions, status
-from django.contrib.auth.models import make_password
 
 from .models import User
 
@@ -130,6 +130,22 @@ class UserSerializer(serializers.ModelSerializer):
         return user
 
 
+class UserGeneralInfoSerializer(serializers.ModelSerializer):
+    """User's public info serializer."""
+
+    url = serializers.HyperlinkedIdentityField(view_name="account:user-detail")
+
+    class Meta:
+        model = User
+        fields = (
+            "url",
+            "id",
+            "first_name",
+            "last_name",
+            "is_active",
+        )
+
+
 class LoginSerializer(serializers.Serializer):
     """Login serializer."""
 
@@ -159,8 +175,8 @@ class RegisterSerializer(serializers.ModelSerializer):
         Make sure an email is unique.
         """
         if User.objects.filter(mobile=attrs["mobile"]).exists() or (
-            "username" in attrs
-            and User.objects.filter(username=attrs["username"]).exists()
+                "username" in attrs
+                and User.objects.filter(username=attrs["username"]).exists()
         ):
             raise exceptions.ValidationError(
                 detail={"message": "A user with that email already exists."},

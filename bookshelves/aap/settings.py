@@ -21,6 +21,8 @@ from .apps import all_serializers
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+ENVIRONMENT = os.environ.get("AAP_ENVIRONMENT")
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
@@ -95,8 +97,21 @@ APPEND_SLASH = True
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
 DATABASES = {
-    "default": {"ENGINE": "django.db.backends.sqlite3", "NAME": BASE_DIR / "db.sqlite3"}
+    "default": {
+        "ENGINE": "django.db.backends.sqlite3",
+        "NAME": BASE_DIR / "db.sqlite3"
+    },
+    "production": {
+        "ENGINE": "django.db.backends.postgresql",
+        "HOST": os.environ.get("AAP_DATABASES_PRODUCTION_HOST", "127.0.0.1"),
+        "PORT": int(os.environ.get("AAP_DATABASES_PRODUCTION_PORT", "5432")),
+        "NAME": "aap",
+        "USER": os.environ.get("AAP_DATABASES_PRODUCTION_USER", "postgres"),
+        "PASSWORD": os.environ.get("AAP_DATABASES_PRODUCTION_PASSWORD", "postgres"),
+    },
 }
+
+DATABASE_ROUTERS = ["aap.lib.DatabaseRouter"]
 
 # Customized models.
 

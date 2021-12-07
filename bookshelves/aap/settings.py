@@ -21,7 +21,7 @@ from .apps import all_serializers
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-ENVIRONMENT = os.environ.get("AAP_ENVIRONMENT")
+ENVIRONMENT = os.environ.get("AAP_ENVIRONMENT", "development")
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
@@ -97,7 +97,8 @@ APPEND_SLASH = True
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
 DATABASES = {
-    "default": {
+    "default": {},
+    "development": {
         "ENGINE": "django.db.backends.sqlite3",
         "NAME": BASE_DIR / "db.sqlite3"
     },
@@ -111,7 +112,7 @@ DATABASES = {
     },
 }
 
-DATABASE_ROUTERS = ["aap.lib.DatabaseRouter"]
+DATABASE_ROUTERS = ["aap.libs.DatabaseRouter"]
 
 # Customized models.
 
@@ -147,12 +148,12 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
-STATIC_URL = "/static/"
+STATIC_URL = os.environ.get("AAP_STATIC_URL", "/static/")
 STATIC_ROOT = BASE_DIR / "static"
 
 # Media files and directories.
 
-MEDIA_URL = "/media/"
+MEDIA_URL = os.environ.get("AAP_MEDIA_URL", "/media/")
 MEDIA_ROOT = BASE_DIR / "media"
 MEDIA_ALLOWED_EXTENSIONS = ast.literal_eval(
     os.environ.get(

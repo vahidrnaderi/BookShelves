@@ -3,6 +3,7 @@ import logging
 import os
 import pathlib
 import shutil
+from urllib.parse import urljoin
 from typing import List, Dict, Union, Optional
 
 from django.conf import settings
@@ -24,10 +25,14 @@ from .serializers import (
 )
 
 
-def fix_path(node_path: str) -> str:
+def fix_path(node_path: str, full_path: bool = False) -> str:
     """Remove based path from a user media path."""
     media_root = settings.MEDIA_ROOT.as_posix()
-    return node_path[node_path.find(media_root) + len(media_root) :]
+    # +1 is for removing the first slash.
+    node_path = node_path[node_path.find(media_root) + len(media_root) + 1 :]
+    if full_path:
+        return urljoin(settings.MEDIA_URL, node_path)
+    return node_path
 
 
 def setup_path(fn):
@@ -162,6 +167,7 @@ class FileAPIView(APIView):
         if path.is_dir():
             return {
                 "link": fix_path(path.as_posix()),
+                "public": fix_path(path.as_posix(), True),
                 "name": path.name,
                 "size": {
                     "bytes": 0,
@@ -172,6 +178,7 @@ class FileAPIView(APIView):
         size = os.stat(path.as_posix()).st_size
         return {
             "link": fix_path(path.as_posix()),
+            "public": fix_path(path.as_posix(), True),
             "name": path.name,
             "size": {
                 "bytes": size,

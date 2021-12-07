@@ -1,0 +1,48 @@
+---
+version: "3"
+
+services:
+
+  aap:
+    build:
+      dockerfile: deploy/docker/Dockerfile
+      context: ../../
+    environment:
+      AAP_ENVIRONMENT: production
+      AAP_STATIC_URL: http://127.0.0.1/static/
+      AAP_MEDIA_URL: http://127.0.0.1/media/
+      AAP_ALLOWED_HOSTS: "['143:244:145:69','127.0.0.1', 'localhost']"
+      AAP_DATABASES_PRODUCTION_HOST: db
+      AAP_DATABASES_PRODUCTION_USER: aap
+      AAP_DATABASES_PRODUCTION_PASSWORD: "!@#)(*D"
+    ports:
+      - "8000:8000"
+    volumes:
+      - ../../aap/static/:/opt/aap/static/
+      - ../../aap/media/:/opt/aap/media/
+    restart: on-failure
+    depends_on:
+      - db
+    command: "./init.sh --with-delay"
+
+  db:
+    image: postgres
+    volumes:
+      - ./db/:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: aap
+      POSTGRES_USER: aap
+      POSTGRES_PASSWORD: "!@#)(*D"
+    restart: unless-stopped
+
+  ws:
+    image: nginx
+    ports:
+      - "80:80"
+    volumes:
+      - ../../aap/static/:/www/data/static/
+      - ../../aap/media/:/www/data/media/
+      - ./nginx.conf:/etc/nginx/nginx.conf
+    restart: always
+    depends_on:
+      - aap

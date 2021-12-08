@@ -11,7 +11,7 @@ services:
       AAP_ENVIRONMENT: production
       AAP_STATIC_URL: http://127.0.0.1/static/
       AAP_MEDIA_URL: http://127.0.0.1/media/
-      AAP_ALLOWED_HOSTS: "['143:244:145:69','127.0.0.1', 'localhost']"
+      AAP_ALLOWED_HOSTS: "['143.244.145.69','127.0.0.1', 'localhost']"
       AAP_DATABASES_PRODUCTION_HOST: db
       AAP_DATABASES_PRODUCTION_USER: aap
       AAP_DATABASES_PRODUCTION_PASSWORD: "!@#)(*D"

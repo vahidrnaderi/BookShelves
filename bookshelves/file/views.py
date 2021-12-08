@@ -167,7 +167,7 @@ class FileAPIView(APIView):
         if path.is_dir():
             return {
                 "link": fix_path(path.as_posix()),
-                "public": fix_path(path.as_posix(), True),
+                "url": fix_path(path.as_posix(), True),
                 "name": path.name,
                 "size": {
                     "bytes": 0,
@@ -178,7 +178,7 @@ class FileAPIView(APIView):
         size = os.stat(path.as_posix()).st_size
         return {
             "link": fix_path(path.as_posix()),
-            "public": fix_path(path.as_posix(), True),
+            "url": fix_path(path.as_posix(), True),
             "name": path.name,
             "size": {
                 "bytes": size,

@@ -48,12 +48,13 @@ class PostViewSet(
     queryset = Post.objects.filter(is_deleted=False)
     serializer_class = PostSerializer
 
-    def create(self, request, *args, **kwargs):
-        """Attach user ID into a request."""
-        request.data["user"] = self.request.user.id
-        if kwargs.get("category_pk"):
-            request.data["category"] = kwargs["category_pk"]
-        return super().create(request, *args, **kwargs)
+    def perform_create(self, serializer):
+        """Override post value."""
+        if self.kwargs.get("category_pk"):
+            category = Category.objects.get(id=self.kwargs["category_pk"])
+            serializer.save(category=category, user=self.request.user)
+        else:
+            serializer.save(user=self.request.user)
 
 
 class CommentViewSet(

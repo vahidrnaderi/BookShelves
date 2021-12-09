@@ -88,7 +88,7 @@ class PostSerializer(serializers.ModelSerializer):
     comments_count = serializers.SerializerMethodField()
     stars_average = serializers.SerializerMethodField()
     bookmarks_count = serializers.SerializerMethodField()
-    user = UserGeneralInfoSerializer()
+    user = UserGeneralInfoSerializer(many=False, read_only=True)
 
     class Meta:
         model = Post

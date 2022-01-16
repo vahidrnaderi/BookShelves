@@ -175,8 +175,8 @@ class RegisterSerializer(serializers.ModelSerializer):
         Make sure an email is unique.
         """
         if User.objects.filter(mobile=attrs["mobile"]).exists() or (
-                "username" in attrs
-                and User.objects.filter(username=attrs["username"]).exists()
+            "username" in attrs
+            and User.objects.filter(username=attrs["username"]).exists()
         ):
             raise exceptions.ValidationError(
                 detail={"message": "A user with that email already exists."},

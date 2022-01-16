@@ -21,7 +21,7 @@ from .apps import all_serializers
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-ENVIRONMENT = os.environ.get("AAP_ENVIRONMENT", "development")
+ENVIRONMENT = os.environ.get("AAP_ENVIRONMENT")
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
@@ -49,15 +49,18 @@ INSTALLED_APPS = [
     "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.staticfiles",
+    "polymorphic",
     "rest_framework",
     "rest_framework.authtoken",
     "corsheaders",
+    "django_filters",
     "drf_yasg",
     "account",
     "blog",
     "page",
     "file",
     "slideshow",
+    "product",
 ]
 
 # Note: it will be overridden by 'page' app.
@@ -97,10 +100,9 @@ APPEND_SLASH = True
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
 DATABASES = {
-    "default": {},
-    "development": {
+    "default": {
         "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3"
+        "NAME": BASE_DIR / "db.sqlite3",
     },
     "production": {
         "ENGINE": "django.db.backends.postgresql",
@@ -177,6 +179,9 @@ REST_FRAMEWORK = {
     "DEFAULT_PERMISSION_CLASSES": [
         "rest_framework.permissions.AllowAny",
     ],
+    "DEFAULT_FILTER_BACKENDS": [
+        "django_filters.rest_framework.DjangoFilterBackend",
+    ],
 }
 
 # Swagger settings.
@@ -197,6 +202,7 @@ SWAGGER_SETTINGS = {
 DEFAULT_USER_GROUP = "users"
 LOGIN_URL = "/account/login"
 LOGOUT_URL = "/account/logout"
+DEFAULT_USER_GROUP_PERMISSIONS = []
 
 # Blog component settings.
 
@@ -207,10 +213,14 @@ STAR_MAX_VALUE = int(os.environ.get("AAP_STAR_MAX_VALUE", "10"))
 # category record deleted in "category" table.
 DELETED_POST_CATEGORY_NAME = "__deleted_category"
 
-# Page component settings.
+# Page component.
 
 DELETED_MENU_GROUP_NAME = "__deleted_group_menu"
 
-# Slideshow component settings.
+# Slideshow component.
 
 DELETED_SLIDE_GROUP_NAME = "__deleted_group_menu"
+
+# Product component.
+
+DELETED_PRODUCT_CATEGORY_NAME = "__deleted_product"

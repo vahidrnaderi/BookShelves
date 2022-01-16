@@ -20,11 +20,15 @@ router.register("stars", StarViewSet, basename="star")
 router.register("bookmarks", BookmarkViewSet, basename="bookmark")
 
 # Category nested router.
-category_router = nested_routers.NestedDefaultRouter(router, "categories", lookup="category")
+category_router = nested_routers.NestedDefaultRouter(
+    router, "categories", lookup="category"
+)
 category_router.register("posts", PostViewSet, basename="post")
 
 # Post nested router.
-post_router = nested_routers.NestedDefaultRouter(category_router, "posts", lookup="post")
+post_router = nested_routers.NestedDefaultRouter(
+    category_router, "posts", lookup="post"
+)
 post_router.register("comments", CommentViewSet, basename="comment")
 
 urlpatterns = [

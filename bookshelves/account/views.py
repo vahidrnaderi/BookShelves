@@ -1,23 +1,34 @@
 """Auth views."""
+from base.permissions import AAPDjangoModelPermissions
 from django.contrib.auth import authenticate, logout
 from django.contrib.auth.models import Group, Permission
 from django.contrib.contenttypes.models import ContentType
+from django_filters import rest_framework as filters
 from drf_yasg.utils import swagger_auto_schema
-from rest_framework import viewsets, permissions, views, status, generics
+from rest_framework import generics, permissions, status, views, viewsets
 from rest_framework.authtoken.models import Token
 from rest_framework.response import Response
 
-from base.permissions import AAPDjangoModelPermissions
 from .models import User
 from .serializers import (
-    UserSerializer,
-    GroupSerializer,
-    PermissionSerializer,
-    ContentTypeSerializer,
-    LoginSerializer,
     ChangePasswordSerializer,
+    ContentTypeSerializer,
+    GroupSerializer,
+    LoginSerializer,
+    PermissionSerializer,
     RegisterSerializer,
+    UserSerializer,
 )
+
+
+class ContentTypeFilter(filters.FilterSet):
+    """Content type filter."""
+
+    name = filters.CharFilter(field_name="model")
+
+    class Meta:
+        model = ContentType
+        fields = ("name", "app_label")
 
 
 class ContentTypeViewSet(viewsets.ReadOnlyModelViewSet):
@@ -26,6 +37,7 @@ class ContentTypeViewSet(viewsets.ReadOnlyModelViewSet):
     permission_classes = [permissions.IsAuthenticated, AAPDjangoModelPermissions]
     queryset = ContentType.objects.all()
     serializer_class = ContentTypeSerializer
+    filterset_class = ContentTypeFilter
 
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -34,6 +46,16 @@ class UserViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated, AAPDjangoModelPermissions]
     queryset = User.objects.all()
     serializer_class = UserSerializer
+    filterset_fields = (
+        "username",
+        "mobile",
+        "first_name",
+        "last_name",
+        "email",
+        "is_staff",
+        "is_active",
+        "date_joined",
+    )
 
 
 class GroupViewSet(viewsets.ModelViewSet):
@@ -42,6 +64,7 @@ class GroupViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated, AAPDjangoModelPermissions]
     queryset = Group.objects.all()
     serializer_class = GroupSerializer
+    filterset_fields = ("name",)
 
 
 class PermissionViewSet(viewsets.ReadOnlyModelViewSet):
@@ -50,6 +73,7 @@ class PermissionViewSet(viewsets.ReadOnlyModelViewSet):
     permission_classes = [permissions.IsAuthenticated, AAPDjangoModelPermissions]
     queryset = Permission.objects.all()
     serializer_class = PermissionSerializer
+    filterset_fields = ("name", "codename")
 
 
 class LoginView(views.APIView):

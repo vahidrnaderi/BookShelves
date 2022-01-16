@@ -1,3 +1,8 @@
+.PHONY: new-component
+new-component:
+	cd aap && python manage.py startapp $(app)
+	find aap/ -iname "admin.py" -delete
+
 .PHONY: dev
 dev:
 	cd aap && python3 manage.py runserver 8000

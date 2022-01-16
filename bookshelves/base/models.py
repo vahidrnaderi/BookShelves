@@ -26,6 +26,7 @@ class AbstractBase(models.Model):
 
     class Meta:
         abstract = True
+        ordering = ["created_at"]
 
     def __repr__(self):
         return f"<{self.__class__.__name__} {self.id} {self.created_at}>"
@@ -40,6 +41,7 @@ class Base(AbstractBase):
 
     class Meta:
         abstract = True
+        ordering = ["created_at"]
 
     def delete(self, *args, **kwargs):
         """Django built-in method."""

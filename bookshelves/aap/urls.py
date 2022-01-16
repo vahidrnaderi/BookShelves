@@ -29,22 +29,18 @@ schema_view = get_schema_view(
 urlpatterns = [
     # Account.
     path("account/", include(("account.urls", "account"))),
-
     # Blog.
     path("blog/", include(("blog.urls", "blog"))),
-
     # Media (file/directory) manager.
     path("file/", include(("file.urls", "file"))),
-
     # Page.
     path("page/", include(("page.urls", "page"))),
-
     # Slideshow.
     path("slideshow/", include(("slideshow.urls", "slideshow"))),
-
+    # Product.
+    path("product/", include(("product.urls", "product"))),
     # Health check.
     path("health-check/", health_check),
-
     # Swagger.
     path(
         "swagger/",

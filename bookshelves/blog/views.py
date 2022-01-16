@@ -1,16 +1,17 @@
 """Blog views."""
-from rest_framework import permissions, generics, status
+from base.views import BaseViewSet
+from django_filters import rest_framework as filters
+from rest_framework import generics, permissions, status
 from rest_framework.response import Response
 
-from base.views import BaseViewSet
-from .models import Post, Tag, Star, Category, Comment
+from .models import Category, Comment, Post, Star, Tag
 from .serializers import (
-    PostSerializer,
-    TagSerializer,
-    StarSerializer,
+    BookmarkSerializer,
     CategorySerializer,
     CommentSerializer,
-    BookmarkSerializer,
+    PostSerializer,
+    StarSerializer,
+    TagSerializer,
 )
 
 
@@ -26,6 +27,7 @@ class TagViewSet(
     queryset = Tag.objects.filter(is_deleted=False)
     serializer_class = TagSerializer
     alternative_lookup_field = "name"
+    filterset_fields = ("name",)
 
 
 class CategoryViewSet(
@@ -37,6 +39,7 @@ class CategoryViewSet(
     queryset = Category.objects.filter(is_deleted=False)
     serializer_class = CategorySerializer
     alternative_lookup_field = "name"
+    filterset_fields = ("name",)
 
 
 class PostViewSet(
@@ -47,6 +50,7 @@ class PostViewSet(
     permission_classes = [permissions.DjangoModelPermissions]
     queryset = Post.objects.filter(is_deleted=False)
     serializer_class = PostSerializer
+    filterset_fields = ("title", "slug", "tags", "is_draft")
 
     def perform_create(self, serializer):
         """Override post value."""
@@ -65,6 +69,7 @@ class CommentViewSet(
     permission_classes = [permissions.IsAuthenticated]
     queryset = Comment.objects.filter(is_deleted=False, is_approved=True)
     serializer_class = CommentSerializer
+    filterset_fields = ("user", "is_approved", "post")
 
     def get_queryset(self):
         """Only fetch post-related comments."""

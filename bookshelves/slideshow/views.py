@@ -28,7 +28,9 @@ class SlideShowViewSet(
     serializer_class = SlideShowSerializer
 
     def get_queryset(self):
-        return SlideShow.objects.filter(is_deleted=False, group_slideshow=self.kwargs["group_pk"])
+        return SlideShow.objects.filter(
+            is_deleted=False, group_slideshow=self.kwargs["group_pk"]
+        )
 
     def perform_create(self, serializer):
         """Override group_slideshow value."""

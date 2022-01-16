@@ -15,6 +15,7 @@ class TagSerializer(serializers.ModelSerializer):
             "id",
             "name",
         )
+        ref_name = "blog"
 
 
 class CommentSerializer(serializers.ModelSerializer):
@@ -63,10 +64,11 @@ class BookmarkSerializer(serializers.ModelSerializer):
     class Meta:
         model = Post
         fields = ("post",)
+        ref_name = "blog"
 
 
 class CategorySerializer(serializers.ModelSerializer):
-    """Bookmark serializer."""
+    """Category serializer."""
 
     url = serializers.HyperlinkedIdentityField(view_name="blog:category-detail")
 
@@ -78,6 +80,7 @@ class CategorySerializer(serializers.ModelSerializer):
             "name",
             "parent",
         )
+        ref_name = "blog"
 
 
 class PostSerializer(serializers.ModelSerializer):

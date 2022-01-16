@@ -1,13 +1,9 @@
 """Page views."""
-from rest_framework import permissions, generics
-
 from base.views import BaseViewSet
+from rest_framework import generics, permissions
+
 from .models import GroupMenu, Menu, Page
-from .serializers import (
-    GroupMenuSerializer,
-    MenuSerializer,
-    PageSerializer,
-)
+from .serializers import GroupMenuSerializer, MenuSerializer, PageSerializer
 
 
 class PageViewSet(
@@ -28,6 +24,7 @@ class MenuViewSet(
     permission_classes = [permissions.DjangoModelPermissions]
     queryset = Menu.objects.filter(is_deleted=False)
     serializer_class = MenuSerializer
+    filterset_fields = ("label",)
 
 
 class GroupMenuViewSet(
@@ -38,3 +35,4 @@ class GroupMenuViewSet(
     permission_classes = [permissions.DjangoModelPermissions]
     queryset = GroupMenu.objects.filter(is_deleted=False)
     serializer_class = GroupMenuSerializer
+    filterset_fields = ("name",)

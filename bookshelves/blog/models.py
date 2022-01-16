@@ -48,8 +48,8 @@ class Post(Base):
     brief = models.TextField(null=False)
     content = models.TextField(null=False)
     slug = models.CharField(max_length=1024, unique=True)
-    tags = models.ManyToManyField(Tag, blank=True, null=True, related_name="tags")
-    bookmarks = models.ManyToManyField(User, related_name="bookmarks", null=True)
+    tags = models.ManyToManyField(Tag, blank=True, related_name="tags")
+    bookmarks = models.ManyToManyField(User, related_name="post_bookmarks")
     image = models.URLField()
     is_draft = models.BooleanField(default=False)
     previous = models.ForeignKey(

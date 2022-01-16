@@ -1,6 +1,5 @@
 """Blog views."""
 from base.views import BaseViewSet
-from django_filters import rest_framework as filters
 from rest_framework import generics, permissions, status
 from rest_framework.response import Response
 

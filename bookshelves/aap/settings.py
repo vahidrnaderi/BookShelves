@@ -61,6 +61,7 @@ INSTALLED_APPS = [
     "file",
     "slideshow",
     "product",
+    "price",
 ]
 
 # Note: it will be overridden by 'page' app.

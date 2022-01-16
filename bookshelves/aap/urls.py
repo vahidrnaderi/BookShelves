@@ -5,7 +5,7 @@ The `urlpatterns` list routes URLs to views. For more information please see:
 """
 from django.conf import settings
 from django.conf.urls.static import static
-from django.urls import path, include
+from django.urls import include, path
 from drf_yasg import openapi
 from drf_yasg.views import get_schema_view
 from rest_framework import permissions
@@ -39,6 +39,8 @@ urlpatterns = [
     path("slideshow/", include(("slideshow.urls", "slideshow"))),
     # Product.
     path("product/", include(("product.urls", "product"))),
+    # Price.
+    path("price/", include(("price.urls", "price"))),
     # Health check.
     path("health-check/", health_check),
     # Swagger.

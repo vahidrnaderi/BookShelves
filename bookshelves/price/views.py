@@ -1,7 +1,7 @@
 """Price views."""
 from base.views import BaseViewSet
 from django_filters import rest_framework as filters
-from rest_framework import generics, permissions, status
+from rest_framework import generics, permissions
 
 from .models import Price
 from .serializers import PriceSerializer
@@ -17,7 +17,7 @@ class PriceFilterSet(filters.FilterSet):
 
     class Meta:
         model = Price
-        fields = ("min_price", "max_price", "min_discount", "max_discount")
+        fields = ("min_price", "max_price", "min_discount", "max_discount", "inventory")
 
 
 class PriceViewSet(

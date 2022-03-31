@@ -1,4 +1,4 @@
-SRC_DIR ?= thrush
+SRC_DIR ?= bookshelves
 
 .PHONY: new-component
 new-component:
@@ -30,7 +30,7 @@ package:
 
 .PHONY: image
 image:
-	docker build -t thrush -f deploy/docker/Dockerfile .
+	docker build -t bookshelves -f deploy/docker/Dockerfile .
 
 .PHONY: docker-compose
 docker-compose:

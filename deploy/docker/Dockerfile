@@ -1,9 +1,9 @@
 FROM python:3.9
 
-ADD aap/ /opt/aap
-WORKDIR /opt/aap
+ADD bookshelves/ /opt/bookshelves
+WORKDIR /opt/bookshelves
 COPY requirements.txt .
 
 RUN pip install -r requirements.txt
 
-CMD gunicorn aap.wsgi -b 0.0.0.0:8000
+CMD gunicorn bookshelves.wsgi -b 0.0.0.0:8000

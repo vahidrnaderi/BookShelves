@@ -1,5 +1,5 @@
 """Blog tests."""
-from aap.tests import BaseAPITestCase
+from bookshelves.tests import BaseAPITestCase
 from django.urls import reverse
 
 

@@ -5,5 +5,5 @@ fi
 python manage.py migrate --database=production
 python manage.py collectstatic --noinput
 python manage.py loaddata tests/fixtures/sample.json --database=production
-gunicorn aap.wsgi -b 0.0.0.0:8000
+gunicorn bookshelves.wsgi -b 0.0.0.0:8000
 
